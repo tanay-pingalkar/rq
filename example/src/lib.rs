@@ -26,19 +26,24 @@ pub fn main() {
         .html("sndjfajasjh")
         .on("click", Box::new(move |event: web_sys::MouseEvent| {}))
         .unwrap()
-        .class_name("new class")
-        .update()
-        .unwrap();
+        .class_name("new class");
 
-    rq::N::new("button")
-        .unwrap()
-        .html("sndjfajasjh")
-        .on(
-            "click",
-            Box::new(move |event: web_sys::MouseEvent| console_log!("hey yo")),
-        )
-        .unwrap()
-        .class_name("new class")
-        .update()
-        .unwrap();
+    // rq::N::new("button")
+    //     .unwrap()
+    //     .html("sndjfajasjh")
+    //     .on(
+    //         "click",
+    //         Box::new(move |event: web_sys::MouseEvent| console_log!("hey yo")),
+    //     )
+    //     .unwrap()
+    //     .class_name("new class")
+    //     .update()
+    //     .unwrap();
+
+    rq::C::new("aclass").unwrap().html("a button from rq").on(
+        "click",
+        Box::new(move |_event| {
+            rq::C::new("aclass").unwrap().html("comon");
+        }),
+    );
 }
