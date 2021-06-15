@@ -57,7 +57,7 @@ rq::N::new("button")
       req::I::new("btn-id", |html| {
         let html = html.parse::<u32>().unwrap() + 1;
         html.to_string()
-      })
+      });
   }))
 ```
 
