@@ -44,5 +44,22 @@ rq::C::new("class-name") // name of tag
   }))
 ```
 
+## html_cj
+html_cj takes a closure and return the html, it is important when you have to change the html of element based on previous html
+``` rust
+use req;
+
+rq::N::new("button")
+  .unwrap()
+  .html("0")
+  .id("btn-id")
+  .on("click",Box::new(move |event| {
+      req::I::new("btn-id", |html| {
+        let html = html.parse::<u32>().unwrap() + 1;
+        html.to_string()
+      })
+  }))
+```
+
 
 currently the api is small and i am still learning rust. I will add more features to it so stay tuned.
