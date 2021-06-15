@@ -17,7 +17,7 @@ rq::I::new("class-name")
 ```
 
 ## req::N
-N stands for new to create new element.
+`N` stands for new to create new element.
 ``` rust
 use req;
 use web_sys::console;
@@ -30,8 +30,8 @@ rq::N::new("p") // name of tag
   }))
 ```
 
-## req::N
-N stands for class to get elements by class name.
+## req::C
+`C` stands for class to get elements by class name.
 ``` rust
 use req;
 use web_sys::console;
