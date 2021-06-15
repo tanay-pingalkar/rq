@@ -21,29 +21,46 @@ macro_rules! console_log {
 
 #[wasm_bindgen(start)]
 pub fn main() {
-    rq::I::new("heading")
+    rq::N::new("button")
         .unwrap()
-        .html("sndjfajasjh")
-        .on("click", Box::new(move |event: web_sys::MouseEvent| {}))
+        .html("+")
+        .on(
+            "click",
+            Box::new(move |_event| {
+                rq::I::new("content").unwrap().html_cj(&|html| {
+                    let html = html.parse::<i32>().unwrap() + 1;
+                    html.to_string()
+                });
+            }),
+        )
         .unwrap()
-        .class_name("new class");
+        .append("body")
+        .unwrap();
 
-    // rq::N::new("button")
-    //     .unwrap()
-    //     .html("sndjfajasjh")
-    //     .on(
-    //         "click",
-    //         Box::new(move |event: web_sys::MouseEvent| console_log!("hey yo")),
-    //     )
-    //     .unwrap()
-    //     .class_name("new class")
-    //     .update()
-    //     .unwrap();
+    rq::N::new("button")
+        .unwrap()
+        .html("0")
+        .id("content")
+        .on("click", Box::new(move |_event| {}))
+        .unwrap()
+        .append("body")
+        .unwrap();
 
-    rq::C::new("aclass").unwrap().html("a button from rq").on(
-        "click",
-        Box::new(move |_event| {
-            rq::C::new("aclass").unwrap().html("comon");
-        }),
-    );
+    rq::N::new("button")
+        .unwrap()
+        .html("-")
+        .on("click", Box::new(move |_event| {}))
+        .unwrap()
+        .on(
+            "click",
+            Box::new(move |_event| {
+                rq::I::new("content").unwrap().html_cj(&|html| {
+                    let html = html.parse::<i32>().unwrap() - 1;
+                    html.to_string()
+                });
+            }),
+        )
+        .unwrap()
+        .append("body")
+        .unwrap();
 }

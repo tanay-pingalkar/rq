@@ -48,6 +48,15 @@ impl I {
         closure.forget();
         Ok(self)
     }
+    pub fn html_cj(&self, func: &dyn Fn(&str) -> String) -> &I {
+        self.element
+            .set_inner_html(&func(&self.element.inner_html()));
+        self
+    }
+
+    // pub fn s(&self, name: &str, value: &str) -> (&str, str) {
+    //     self.element.set
+    // }
 
     pub fn append(&self) -> Result<&I, &'static str> {
         self.document
@@ -96,9 +105,19 @@ impl N {
         self.element.set_inner_html(&text);
         self
     }
+    pub fn html_cj(&self, func: &dyn Fn(&str) -> &str) -> &N {
+        self.element
+            .set_inner_html(&func(&self.element.inner_html()));
+        self
+    }
 
     pub fn class_name(&self, class_name: &str) -> &N {
         self.element.set_class_name(class_name);
+        self
+    }
+
+    pub fn id(&self, id: &str) -> &N {
+        self.element.set_id(id);
         self
     }
 
@@ -111,18 +130,15 @@ impl N {
         Ok(self)
     }
 
-    pub fn append(&self) -> Result<&N, &'static str> {
-        self.document
-            .body()
-            .unwrap()
-            .append_child(&self.element)
-            .unwrap();
+    pub fn append(&self, id: &str) -> Result<&N, &'static str> {
+        let parent = self.document.get_element_by_id(id).unwrap();
+        let parent: Element = parent.dyn_into::<Element>().map_err(|_| ()).unwrap();
+        parent.append_child(&self.element).unwrap();
         Ok(self)
     }
 }
 
 pub struct C {
-    document: Document,
     element: HtmlCollection,
 }
 
@@ -137,7 +153,7 @@ impl C {
             .map_err(|_| ())
             .unwrap();
 
-        Ok(C { document, element })
+        Ok(C { element })
     }
 
     pub fn html(&self, text: &str) -> &C {
@@ -164,17 +180,6 @@ impl C {
                 .unwrap();
         }
         closure.forget();
-        Ok(self)
-    }
-
-    pub fn append(&self) -> Result<&C, &'static str> {
-        for i in 0..self.element.length() {
-            self.document
-                .body()
-                .unwrap()
-                .append_child(&self.element.item(i).unwrap())
-                .unwrap();
-        }
         Ok(self)
     }
 }
