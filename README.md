@@ -30,7 +30,7 @@ rq::N::new("p") // name of tag
   }))
 ```
 
-## req::C
+## req::N
 N stands for class to get elements by class name.
 ``` rust
 use req;
