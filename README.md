@@ -28,6 +28,8 @@ rq::N::new("p") // name of tag
   .on("click",Box::new(move |event| {
     console::log_2(&"event : ".into(), &event.into())
   }))
+  .append("id")
+  .unwrap() 
 ```
 
 ## req::C
@@ -41,6 +43,25 @@ rq::C::new("class-name") // name of tag
   .html("rq looks good")
   .on("click",Box::new(move |event| {
     console::log_2(&"event : ".into(), &event.into())
+  }))
+```
+
+## html_cj
+html_cj takes a closure and return the html, it is important when you have to change the html of element based on previous html
+``` rust
+use req;
+
+rq::N::new("button")
+  .unwrap()
+  .html("0")
+  .id("btn-id")
+  .on("click",Box::new(move |event| {
+      req::I::new("btn-id")
+         .unwrap() 
+         .html_cj(|html| {
+             let html = html.parse::<u32>().unwrap() + 1;
+             html.to_string()
+          });
   }))
 ```
 
