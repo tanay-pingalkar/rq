@@ -1,4 +1,5 @@
 use rq;
+use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::{Document, Element, HtmlElement, Window};
@@ -21,24 +22,27 @@ macro_rules! console_log {
 
 #[wasm_bindgen(start)]
 pub fn main() {
-    rq::N::new("button")
-        .unwrap()
-        .html("+")
-        .on(
-            "click",
-            Box::new(move |_event| {
-                rq::I::new("content").unwrap().html_cj(&|html| {
-                    let html = html.parse::<i32>().unwrap() + 1;
-                    html.to_string()
-                });
-            }),
-        )
-        .unwrap()
-        .append("body")
-        .unwrap();
+    let content = Rc::new(rq::N::new("button").unwrap());
+    {
+        let content = content.clone();
+        rq::N::new("button")
+            .unwrap()
+            .html("+")
+            .on(
+                "click",
+                Box::new(move |_event| {
+                    content.html_cj(&|html| {
+                        let html = html.parse::<i32>().unwrap() + 1;
+                        html.to_string()
+                    });
+                }),
+            )
+            .unwrap()
+            .append("body")
+            .unwrap();
+    }
 
-    rq::N::new("button")
-        .unwrap()
+    content
         .html("0")
         .id("content")
         .on("click", Box::new(move |_event| {}))
@@ -46,21 +50,30 @@ pub fn main() {
         .append("body")
         .unwrap();
 
-    rq::N::new("button")
+    {
+        let content = content.clone();
+        rq::N::new("button")
+            .unwrap()
+            .html("-")
+            .on("click", Box::new(move |_event| {}))
+            .unwrap()
+            .on(
+                "click",
+                Box::new(move |_event| {
+                    content.html_cj(&|html| {
+                        let html = html.parse::<i32>().unwrap() - 1;
+                        html.to_string()
+                    });
+                }),
+            )
+            .unwrap()
+            .append("body")
+            .unwrap();
+    }
+
+    rq::C::new("body")
         .unwrap()
-        .html("-")
-        .on("click", Box::new(move |_event| {}))
+        .nth(0)
         .unwrap()
-        .on(
-            "click",
-            Box::new(move |_event| {
-                rq::I::new("content").unwrap().html_cj(&|html| {
-                    let html = html.parse::<i32>().unwrap() - 1;
-                    html.to_string()
-                });
-            }),
-        )
-        .unwrap()
-        .append("body")
-        .unwrap();
+        .html("lolfjqjfn3j");
 }

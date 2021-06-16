@@ -54,9 +54,22 @@ impl I {
         self
     }
 
-    // pub fn s(&self, name: &str, value: &str) -> (&str, str) {
-    //     self.element.set
-    // }
+    pub fn scroll_top(&self, value: i32) -> &I {
+        self.element.set_scroll_top(value);
+        self
+    }
+    pub fn scroll_left(&self, value: i32) -> &I {
+        self.element.set_scroll_left(value);
+        self
+    }
+    pub fn get_cj<T>(&self, cj: &dyn Fn(&Element) -> T) -> Result<T, &str> {
+        Ok(cj(&self.element))
+    }
+
+    pub fn cj(&self, cj: &dyn Fn(&Element)) -> &I {
+        cj(&self.element);
+        self
+    }
 
     pub fn append(&self) -> Result<&I, &'static str> {
         self.document
@@ -65,6 +78,10 @@ impl I {
             .append_child(&self.element)
             .unwrap();
         Ok(self)
+    }
+
+    pub fn element(document: Document, element: Element) -> I {
+        I { document, element }
     }
 }
 
@@ -105,9 +122,26 @@ impl N {
         self.element.set_inner_html(&text);
         self
     }
-    pub fn html_cj(&self, func: &dyn Fn(&str) -> &str) -> &N {
+    pub fn html_cj(&self, func: &dyn Fn(&str) -> String) -> &N {
         self.element
             .set_inner_html(&func(&self.element.inner_html()));
+        self
+    }
+
+    pub fn scroll_top(&self, value: i32) -> &N {
+        self.element.set_scroll_top(value);
+        self
+    }
+    pub fn scroll_left(&self, value: i32) -> &N {
+        self.element.set_scroll_left(value);
+        self
+    }
+    pub fn get_cj<T>(&self, cj: &dyn Fn(&Element) -> T) -> Result<T, &str> {
+        Ok(cj(&self.element))
+    }
+
+    pub fn cj(&self, cj: &dyn Fn(&Element)) -> &N {
+        cj(&self.element);
         self
     }
 
@@ -139,6 +173,7 @@ impl N {
 }
 
 pub struct C {
+    document: Document,
     element: HtmlCollection,
 }
 
@@ -153,7 +188,7 @@ impl C {
             .map_err(|_| ())
             .unwrap();
 
-        Ok(C { element })
+        Ok(C { document, element })
     }
 
     pub fn html(&self, text: &str) -> &C {
@@ -166,6 +201,18 @@ impl C {
     pub fn class_name(&self, class_name: &str) -> &C {
         for i in 0..self.element.length() {
             self.element.item(i).unwrap().set_class_name(class_name);
+        }
+        self
+    }
+
+    pub fn nth(&self, nth: u32) -> Option<I> {
+        let element = self.element.item(nth).unwrap();
+        Some(I::element(self.document.clone(), element.clone()))
+    }
+
+    pub fn iter(&self, cj: &dyn Fn(&Element)) -> &C {
+        for i in 0..self.element.length() {
+            cj(&self.element.item(i).unwrap());
         }
         self
     }
